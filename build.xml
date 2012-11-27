@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="SM Lite" basedir="." default="createSmliteWar">
+	
+	<property name="src" value="src" />
+	<property name="build" value="build/classes" />
+	<property name="web_resources" value="WebContent" />
+	
+	<property name="warfile" value="smelite" />
+	<target name="unpack">
+		<unwar src="${warfile}.war" dest="${warfile}" />
+	</target>
+	<target name="createSmliteWar" depends="compile, copyConfigurationFiles">
+		<delete file="${warfile}.war"/>
+		<war destfile="${warfile}.war" webxml="${web_resources}/WEB-INF/web.xml" update="true">
+			<classes dir="build\classes" />
+			<fileset dir="WebContent">
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>
+	</target>
+	<target name="compile">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath>
+				<fileset dir="${web_resources}/WEB-INF/lib">
+                    <include name="*.jar"/>
+                </fileset>
+				<fileset dir="lib">
+                    <include name="*.jar"/>
+                </fileset>
+			</classpath>	
+		</javac>
+	</target>
+	<target name="copyConfigurationFiles">
+		<copy todir="${build}">
+            <fileset dir="${src}">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+	</target>
+</project>
